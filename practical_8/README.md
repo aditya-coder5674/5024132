@@ -1,17 +1,50 @@
-# practical_8
+# Practical 8: Device Storage
 
-A new Flutter project.
+This Material 3 Flutter app demonstrates asynchronous text-file storage.
 
-## Getting Started
+## Install and run
 
-This project is a starting point for a Flutter application.
+From the repository root:
 
-A few resources to get you started if this is your first Flutter project:
+```sh
+cd practical_8
+flutter pub get
+flutter run
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+This checkout includes a Windows desktop target, which exercises native
+filesystem access when run on Windows:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```sh
+flutter run -d windows
+```
+
+For Android, this checkout does not yet include Android platform scaffolding.
+Generate it once from `practical_8`, then choose an Android emulator or
+connected device:
+
+```sh
+flutter create --platforms=android .
+flutter run
+```
+
+On Android, the app creates `practical_8_sample.txt` in the directory returned by
+`getApplicationDocumentsDirectory()`, writes the sample sentence, then reads
+the file back. The UI displays the returned directory path, actual file
+contents, successful read count, and time of the latest successful read.
+Tap **Write and read again** to repeat the operation.
+
+## Web preview
+
+Run `flutter run -d chrome` to preview the interface in a browser. Flutter Web
+does not use `path_provider` and `dart:io` to access a device documents
+directory. The web build uses `shared_preferences` browser local storage as a
+separate web-compatible demonstration, clearly labeled in the app. It does
+not create a native text file or claim native filesystem access.
+
+## Verify
+
+```sh
+flutter analyze
+flutter test
+```
