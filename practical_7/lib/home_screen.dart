@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'second_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -10,203 +9,140 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  bool _useAlternateColor = false;
+  Color cardColor = Colors.blue.shade100;
 
-  void _showMessage(String message) {
-    final messenger = ScaffoldMessenger.of(context);
-    messenger
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+  void showMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Motion Lab'),
-        centerTitle: false,
-        leading: const Padding(
-          padding: EdgeInsets.only(left: 16),
-          child: Icon(Icons.explore_rounded),
-        ),
-        leadingWidth: 48,
+        title: const Text('Navigation & Gestures'),
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
       ),
-      body: SafeArea(
-        top: false,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final isWide = constraints.maxWidth >= 640;
-            final routeButtons = isWide
-                ? Row(
-                    children: [
-                      Expanded(child: _pushButton()),
-                      const SizedBox(width: 12),
-                      Expanded(child: _namedRouteButton()),
-                    ],
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _pushButton(),
-                      const SizedBox(height: 12),
-                      _namedRouteButton(),
-                    ],
-                  );
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.touch_app,
+                size: 70,
+                color: Colors.blue,
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'Welcome Home!',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Explore navigation and gestures',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 28),
 
-            return SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(24, 28, 24, 32),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 860),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              // Basic navigation using Navigator.push()
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SecondScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.arrow_forward),
+                  label: const Text('Navigate using push()'),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // Navigation using named routes
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/second');
+                  },
+                  icon: const Icon(Icons.route),
+                  label: const Text('Navigate using Named Route'),
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              const Text(
+                'Try the gestures below!',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Gesture detection
+              GestureDetector(
+                onTap: () {
+                  showMessage('Single tap detected!');
+                },
+                onDoubleTap: () {
+                  setState(() {
+                    cardColor = cardColor == Colors.blue.shade100
+                        ? Colors.orange.shade200
+                        : Colors.blue.shade100;
+                  });
+                  showMessage('Card colour changed!');
+                },
+                onLongPress: () {
+                  showMessage('Long press detected!');
+                },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(28),
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Colors.blue),
+                  ),
+                  child: const Column(
                     children: [
+                      Icon(Icons.touch_app, size: 48),
+                      SizedBox(height: 12),
                       Text(
-                        'Navigation & gestures',
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Two ways to open a screen. Three ways to interact.',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: colors.onSurfaceVariant,
+                        'Touch Me!',
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      SizedBox(height: 8),
+                      Text('Tap • Double tap • Long press'),
+                      SizedBox(height: 8),
                       Text(
-                        'Open the second screen',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      routeButtons,
-                      const SizedBox(height: 32),
-                      Text(
-                        'Gesture practice',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      GestureDetector(
-                        onTap: () => _showMessage('Single tap detected'),
-                        onDoubleTap: () {
-                          setState(() {
-                            _useAlternateColor = !_useAlternateColor;
-                          });
-                        },
-                        onLongPress: () => _showMessage('Long press detected'),
-                        child: Card(
-                          key: const Key('gesture-card'),
-                          margin: EdgeInsets.zero,
-                          elevation: 0,
-                          color: _useAlternateColor
-                              ? colors.tertiaryContainer
-                              : colors.primaryContainer,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.touch_app_rounded,
-                                  size: 30,
-                                  color: _useAlternateColor
-                                      ? colors.onTertiaryContainer
-                                      : colors.onPrimaryContainer,
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Interactive card',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.w600,
-                                              color: _useAlternateColor
-                                                  ? colors.onTertiaryContainer
-                                                  : colors.onPrimaryContainer,
-                                            ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        'Tap, double tap, or press and hold',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              color: _useAlternateColor
-                                                  ? colors.onTertiaryContainer
-                                                  : colors.onPrimaryContainer,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Icon(
-                                  Icons.more_horiz_rounded,
-                                  color: _useAlternateColor
-                                      ? colors.onTertiaryContainer
-                                      : colors.onPrimaryContainer,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        'The card changes colour on double tap.',
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
                 ),
               ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _pushButton() {
-    return FilledButton.icon(
-      onPressed: () {
-        Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (context) => const SecondScreen(),
+            ],
           ),
-        );
-      },
-      icon: const Icon(Icons.open_in_new_rounded),
-      label: const Text('Open with push'),
-      style: FilledButton.styleFrom(
-        minimumSize: const Size.fromHeight(52),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      ),
-    );
-  }
-
-  Widget _namedRouteButton() {
-    return OutlinedButton.icon(
-      onPressed: () => Navigator.pushNamed(context, '/second'),
-      icon: const Icon(Icons.route_rounded),
-      label: const Text('Open named route'),
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size.fromHeight(52),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
       ),
     );
   }

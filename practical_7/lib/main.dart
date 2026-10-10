@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-
 import 'home_screen.dart';
 import 'second_screen.dart';
 
 void main() {
-  runApp(const NavigationGestureApp());
+  runApp(const MyApp());
 }
 
-class NavigationGestureApp extends StatelessWidget {
-  const NavigationGestureApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Navigation & Gestures',
       debugShowCheckedModeBanner: false,
+      title: 'Navigation and Gestures',
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF087E75),
-          brightness: Brightness.light,
-        ),
       ),
       initialRoute: '/',
       routes: {
